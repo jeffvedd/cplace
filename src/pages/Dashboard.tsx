@@ -2,9 +2,13 @@ import { Layout } from '@/components/layout/Layout';
 import { PortfolioOverview } from '@/components/dashboard/PortfolioOverview';
 import { PortfolioChart } from '@/components/dashboard/PortfolioChart';
 import { AssetList } from '@/components/dashboard/AssetList';
+import { LivePriceStatus } from '@/components/dashboard/LivePriceStatus';
 import { motion } from 'framer-motion';
+import { useLivePrices } from '@/hooks/useLivePrices';
 
 const Dashboard = () => {
+  const { isLoading, error, lastUpdated, refreshPrices } = useLivePrices();
+
   return (
     <Layout>
       <motion.div
@@ -12,9 +16,17 @@ const Dashboard = () => {
         animate={{ opacity: 1 }}
         className="space-y-6"
       >
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back! Here's your portfolio overview.</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+            <p className="text-muted-foreground">Welcome back! Here's your portfolio overview.</p>
+          </div>
+          <LivePriceStatus 
+            isLoading={isLoading}
+            error={error}
+            lastUpdated={lastUpdated}
+            onRefresh={refreshPrices}
+          />
         </div>
 
         <PortfolioOverview />
