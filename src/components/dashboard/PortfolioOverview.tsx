@@ -2,28 +2,30 @@ import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Wallet, Target } from 'lucide-react';
 import { useCryptoStore } from '@/store/cryptoStore';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
-import { fadeInUp, staggerContainer, staggerItem } from '@/lib/animations';
+import { staggerContainer, staggerItem } from '@/lib/animations';
+import { useTranslation } from 'react-i18next';
 
 export const PortfolioOverview = () => {
+  const { t } = useTranslation();
   const { portfolio } = useCryptoStore();
   const isPositive = portfolio.changePercent24h >= 0;
 
   const stats = [
     {
-      label: 'Portfolio Value',
+      label: t('common.portfolioValue'),
       value: formatCurrency(portfolio.totalValue),
       icon: Wallet,
       color: 'text-primary',
     },
     {
-      label: '24h Change',
+      label: t('portfolio.change24h'),
       value: formatCurrency(Math.abs(portfolio.change24h)),
       subValue: formatPercent(portfolio.changePercent24h),
       icon: isPositive ? TrendingUp : TrendingDown,
       color: isPositive ? 'text-success' : 'text-destructive',
     },
     {
-      label: 'Total ROI',
+      label: t('portfolio.totalRoi'),
       value: formatCurrency(portfolio.roi),
       subValue: formatPercent(portfolio.roiPercent),
       icon: Target,
