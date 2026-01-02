@@ -6,8 +6,10 @@ import { AssetSelector } from '@/components/trade/AssetSelector';
 import { LivePriceStatus } from '@/components/dashboard/LivePriceStatus';
 import { motion } from 'framer-motion';
 import { useLivePrices } from '@/hooks/useLivePrices';
+import { useTranslation } from 'react-i18next';
 
 const Trade = () => {
+  const { t } = useTranslation();
   const { isLoading, error, lastUpdated, refreshPrices } = useLivePrices();
 
   return (
@@ -19,8 +21,8 @@ const Trade = () => {
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Trade</h1>
-            <p className="text-muted-foreground">Buy and sell cryptocurrencies with real-time pricing.</p>
+            <h1 className="text-3xl font-bold mb-2">{t('trade.title')}</h1>
+            <p className="text-muted-foreground">{t('trade.subtitle')}</p>
           </div>
           <LivePriceStatus 
             isLoading={isLoading}

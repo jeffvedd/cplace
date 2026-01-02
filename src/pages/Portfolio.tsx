@@ -4,8 +4,10 @@ import { formatCurrency, formatPercent, formatCryptoAmount } from '@/lib/formatt
 import { motion } from 'framer-motion';
 import { staggerContainer, staggerItem } from '@/lib/animations';
 import { TrendingUp, TrendingDown, PieChart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Portfolio = () => {
+  const { t } = useTranslation();
   const { assets, portfolio } = useCryptoStore();
 
   // Calculate holdings value for each asset
@@ -23,8 +25,8 @@ const Portfolio = () => {
         className="space-y-6"
       >
         <div>
-          <h1 className="text-3xl font-bold mb-2">Portfolio</h1>
-          <p className="text-muted-foreground">Your cryptocurrency holdings and allocation.</p>
+          <h1 className="text-3xl font-bold mb-2">{t('portfolio.title')}</h1>
+          <p className="text-muted-foreground">{t('portfolio.subtitle')}</p>
         </div>
 
         {/* Portfolio Summary */}
@@ -34,7 +36,7 @@ const Portfolio = () => {
             animate={{ opacity: 1, y: 0 }}
             className="glass-card rounded-2xl p-6"
           >
-            <p className="text-sm text-muted-foreground mb-1">Total Value</p>
+            <p className="text-sm text-muted-foreground mb-1">{t('portfolio.totalValue')}</p>
             <p className="text-3xl font-bold">{formatCurrency(portfolio.totalValue)}</p>
           </motion.div>
           
@@ -44,7 +46,7 @@ const Portfolio = () => {
             transition={{ delay: 0.1 }}
             className="glass-card rounded-2xl p-6"
           >
-            <p className="text-sm text-muted-foreground mb-1">24h Change</p>
+            <p className="text-sm text-muted-foreground mb-1">{t('portfolio.change24h')}</p>
             <p className={`text-3xl font-bold ${portfolio.changePercent24h >= 0 ? 'text-success' : 'text-destructive'}`}>
               {formatPercent(portfolio.changePercent24h)}
             </p>
@@ -56,7 +58,7 @@ const Portfolio = () => {
             transition={{ delay: 0.2 }}
             className="glass-card rounded-2xl p-6"
           >
-            <p className="text-sm text-muted-foreground mb-1">Total ROI</p>
+            <p className="text-sm text-muted-foreground mb-1">{t('portfolio.totalRoi')}</p>
             <p className={`text-3xl font-bold ${portfolio.roiPercent >= 0 ? 'text-success' : 'text-destructive'}`}>
               {formatPercent(portfolio.roiPercent)}
             </p>
@@ -68,7 +70,7 @@ const Portfolio = () => {
             transition={{ delay: 0.3 }}
             className="glass-card rounded-2xl p-6"
           >
-            <p className="text-sm text-muted-foreground mb-1">Assets</p>
+            <p className="text-sm text-muted-foreground mb-1">{t('portfolio.assets')}</p>
             <p className="text-3xl font-bold">{holdings.length}</p>
           </motion.div>
         </div>
@@ -82,19 +84,19 @@ const Portfolio = () => {
         >
           <div className="p-6 border-b border-border/50 flex items-center gap-3">
             <PieChart className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold">Holdings</h3>
+            <h3 className="text-lg font-semibold">{t('portfolio.holdings')}</h3>
           </div>
           
           <div className="overflow-x-auto scrollbar-thin">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border/50">
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">Asset</th>
-                  <th className="text-right p-4 text-sm font-medium text-muted-foreground">Amount</th>
-                  <th className="text-right p-4 text-sm font-medium text-muted-foreground">Price</th>
-                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden sm:table-cell">Value</th>
-                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden md:table-cell">24h Change</th>
-                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden lg:table-cell">Allocation</th>
+                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('portfolio.asset')}</th>
+                  <th className="text-right p-4 text-sm font-medium text-muted-foreground">{t('trade.amount')}</th>
+                  <th className="text-right p-4 text-sm font-medium text-muted-foreground">{t('portfolio.price')}</th>
+                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden sm:table-cell">{t('portfolio.value')}</th>
+                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden md:table-cell">{t('portfolio.change24h')}</th>
+                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden lg:table-cell">{t('portfolio.allocation')}</th>
                 </tr>
               </thead>
               <tbody>

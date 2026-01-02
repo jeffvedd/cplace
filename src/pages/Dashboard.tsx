@@ -5,8 +5,10 @@ import { AssetList } from '@/components/dashboard/AssetList';
 import { LivePriceStatus } from '@/components/dashboard/LivePriceStatus';
 import { motion } from 'framer-motion';
 import { useLivePrices } from '@/hooks/useLivePrices';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
+  const { t } = useTranslation();
   const { isLoading, error, lastUpdated, refreshPrices } = useLivePrices();
 
   return (
@@ -18,8 +20,8 @@ const Dashboard = () => {
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-            <p className="text-muted-foreground">Welcome back! Here's your portfolio overview.</p>
+            <h1 className="text-3xl font-bold mb-2">{t('dashboard.title')}</h1>
+            <p className="text-muted-foreground">{t('dashboard.welcome')}</p>
           </div>
           <LivePriceStatus 
             isLoading={isLoading}

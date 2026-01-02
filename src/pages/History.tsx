@@ -7,8 +7,10 @@ import { staggerContainer, staggerItem } from '@/lib/animations';
 import { Download, Filter, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTranslation } from 'react-i18next';
 
 const History = () => {
+  const { t } = useTranslation();
   const { trades, assets } = useCryptoStore();
   const [filterType, setFilterType] = useState<string>('all');
   const [filterAsset, setFilterAsset] = useState<string>('all');
@@ -42,6 +44,15 @@ const History = () => {
     a.click();
   };
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'completed': return t('history.completed');
+      case 'pending': return t('history.pending');
+      case 'failed': return t('history.failed');
+      default: return status;
+    }
+  };
+
   return (
     <Layout>
       <motion.div
@@ -51,12 +62,12 @@ const History = () => {
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Transaction History</h1>
-            <p className="text-muted-foreground">View and export your trading activity.</p>
+            <h1 className="text-3xl font-bold mb-2">{t('history.title')}</h1>
+            <p className="text-muted-foreground">{t('history.subtitle')}</p>
           </div>
           <Button onClick={handleExport} variant="outline" className="gap-2">
             <Download className="h-4 w-4" />
-            Export CSV
+            {t('history.exportCsv')}
           </Button>
         </div>
 
@@ -65,26 +76,26 @@ const History = () => {
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Filters:</span>
+              <span className="text-sm font-medium">{t('history.filters')}:</span>
             </div>
             
             <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger className="w-32">
-                <SelectValue placeholder="Type" />
+                <SelectValue placeholder={t('history.type')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="buy">Buy</SelectItem>
-                <SelectItem value="sell">Sell</SelectItem>
+                <SelectItem value="all">{t('history.allTypes')}</SelectItem>
+                <SelectItem value="buy">{t('trade.buy')}</SelectItem>
+                <SelectItem value="sell">{t('trade.sell')}</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={filterAsset} onValueChange={setFilterAsset}>
               <SelectTrigger className="w-32">
-                <SelectValue placeholder="Asset" />
+                <SelectValue placeholder={t('history.asset')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Assets</SelectItem>
+                <SelectItem value="all">{t('history.allAssets')}</SelectItem>
                 {assets.map((asset) => (
                   <SelectItem key={asset.id} value={asset.symbol}>
                     {asset.symbol}
@@ -106,14 +117,14 @@ const History = () => {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border/50">
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">Date</th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">Type</th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">Asset</th>
-                  <th className="text-right p-4 text-sm font-medium text-muted-foreground">Amount</th>
-                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden sm:table-cell">Price</th>
-                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden md:table-cell">Total</th>
-                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden lg:table-cell">Fee</th>
-                  <th className="text-center p-4 text-sm font-medium text-muted-foreground">Status</th>
+                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('history.date')}</th>
+                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('history.type')}</th>
+                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('history.asset')}</th>
+                  <th className="text-right p-4 text-sm font-medium text-muted-foreground">{t('history.amount')}</th>
+                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden sm:table-cell">{t('history.price')}</th>
+                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden md:table-cell">{t('history.total')}</th>
+                  <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden lg:table-cell">{t('history.fee')}</th>
+                  <th className="text-center p-4 text-sm font-medium text-muted-foreground">{t('history.status')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -137,7 +148,7 @@ const History = () => {
                         ) : (
                           <ArrowUpRight className="h-3 w-3" />
                         )}
-                        {trade.type.toUpperCase()}
+                        {trade.type === 'buy' ? t('trade.buy').toUpperCase() : t('trade.sell').toUpperCase()}
                       </div>
                     </td>
                     <td className="p-4">
@@ -163,7 +174,7 @@ const History = () => {
                           ? 'bg-warning/10 text-warning'
                           : 'bg-destructive/10 text-destructive'
                       }`}>
-                        {trade.status.charAt(0).toUpperCase() + trade.status.slice(1)}
+                        {getStatusLabel(trade.status)}
                       </span>
                     </td>
                   </motion.tr>
@@ -174,7 +185,7 @@ const History = () => {
 
           {filteredTrades.length === 0 && (
             <div className="p-12 text-center text-muted-foreground">
-              No transactions found matching your filters.
+              {t('history.noTransactions')}
             </div>
           )}
         </motion.div>

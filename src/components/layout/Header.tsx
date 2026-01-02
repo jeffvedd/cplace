@@ -14,19 +14,22 @@ import {
 import { useCryptoStore } from '@/store/cryptoStore';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-
-const navItems = [
-  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/trade', label: 'Trade', icon: TrendingUp },
-  { path: '/portfolio', label: 'Portfolio', icon: Wallet },
-  { path: '/history', label: 'History', icon: History },
-  { path: '/settings', label: 'Settings', icon: Settings },
-];
+import { LanguageSelector } from '@/components/LanguageSelector';
+import { useTranslation } from 'react-i18next';
 
 export const Header = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const { theme, toggleTheme } = useCryptoStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navItems = [
+    { path: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
+    { path: '/trade', label: t('nav.trade'), icon: TrendingUp },
+    { path: '/portfolio', label: t('nav.portfolio'), icon: Wallet },
+    { path: '/history', label: t('nav.history'), icon: History },
+    { path: '/settings', label: t('nav.settings'), icon: Settings },
+  ];
 
   return (
     <header className="sticky top-0 z-50 glass-card border-b border-border/50">
@@ -71,7 +74,9 @@ export const Header = () => {
           </nav>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <LanguageSelector />
+          
           <Button
             variant="ghost"
             size="icon"

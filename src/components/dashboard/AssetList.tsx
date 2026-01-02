@@ -4,8 +4,10 @@ import { formatCurrency, formatPercent, formatCompactNumber } from '@/lib/format
 import { staggerContainer, staggerItem } from '@/lib/animations';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export const AssetList = () => {
+  const { t } = useTranslation();
   const { assets, setSelectedAsset } = useCryptoStore();
   const navigate = useNavigate();
 
@@ -22,18 +24,18 @@ export const AssetList = () => {
       className="glass-card rounded-2xl overflow-hidden"
     >
       <div className="p-6 border-b border-border/50">
-        <h3 className="text-lg font-semibold">Top Assets</h3>
+        <h3 className="text-lg font-semibold">{t('common.topAssets')}</h3>
       </div>
       
       <div className="overflow-x-auto scrollbar-thin">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border/50">
-              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Asset</th>
-              <th className="text-right p-4 text-sm font-medium text-muted-foreground">Price</th>
-              <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden sm:table-cell">24h Change</th>
-              <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden md:table-cell">Volume</th>
-              <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden lg:table-cell">Market Cap</th>
+              <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('portfolio.asset')}</th>
+              <th className="text-right p-4 text-sm font-medium text-muted-foreground">{t('portfolio.price')}</th>
+              <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden sm:table-cell">{t('portfolio.change24h')}</th>
+              <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden md:table-cell">{t('common.volume')}</th>
+              <th className="text-right p-4 text-sm font-medium text-muted-foreground hidden lg:table-cell">{t('common.marketCap')}</th>
             </tr>
           </thead>
           <tbody>
