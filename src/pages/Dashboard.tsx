@@ -1,11 +1,12 @@
 import { Layout } from '@/components/layout/Layout';
-import { PortfolioOverview } from '@/components/dashboard/PortfolioOverview';
-import { PortfolioChart } from '@/components/dashboard/PortfolioChart';
+import { MarketOverview } from '@/components/dashboard/MarketOverview';
+import { MarketChart } from '@/components/dashboard/MarketChart';
 import { AssetList } from '@/components/dashboard/AssetList';
 import { LivePriceStatus } from '@/components/dashboard/LivePriceStatus';
 import { motion } from 'framer-motion';
 import { useLivePrices } from '@/hooks/useLivePrices';
 import { useTranslation } from 'react-i18next';
+import { Info } from 'lucide-react';
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -31,10 +32,22 @@ const Dashboard = () => {
           />
         </div>
 
-        <PortfolioOverview />
+        {/* Disclaimer Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20"
+        >
+          <Info className="h-5 w-5 text-primary flex-shrink-0" />
+          <p className="text-sm text-muted-foreground">
+            {t('dashboard.disclaimer')}
+          </p>
+        </motion.div>
+
+        <MarketOverview />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <PortfolioChart />
+          <MarketChart />
           <AssetList />
         </div>
       </motion.div>

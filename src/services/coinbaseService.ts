@@ -19,10 +19,53 @@ const CRYPTO_METADATA: Record<string, { name: string; icon: string }> = {
   ADA: { name: 'Cardano', icon: '₳' },
   XRP: { name: 'Ripple', icon: '✕' },
   DOT: { name: 'Polkadot', icon: '●' },
+  AVAX: { name: 'Avalanche', icon: '🔺' },
+  MATIC: { name: 'Polygon', icon: '⬡' },
+  LINK: { name: 'Chainlink', icon: '⬡' },
+  UNI: { name: 'Uniswap', icon: '🦄' },
 };
 
 // Store previous prices for calculating changes
-let previousPrices: Record<string, number> = {};
+let previousPrices: Record<string, { price: number; timestamp: number }> = {};
+
+// Simulated 24h change based on price volatility
+const simulateChange24h = (symbol: string, currentPrice: number): number => {
+  // Use a seeded random based on symbol and day for consistency
+  const today = new Date().toDateString();
+  const seed = symbol.charCodeAt(0) + symbol.charCodeAt(symbol.length - 1) + today.length;
+  const pseudoRandom = Math.sin(seed) * 10000 - Math.floor(Math.sin(seed) * 10000);
+  
+  // Generate change between -8% and +8%
+  return (pseudoRandom - 0.5) * 16;
+};
+
+// Simulated market data
+const simulateMarketData = (symbol: string, price: number) => {
+  const seed = symbol.charCodeAt(0) * symbol.charCodeAt(symbol.length - 1);
+  
+  // Market cap estimation based on typical crypto rankings
+  const marketCapMultipliers: Record<string, number> = {
+    BTC: 19500000, // ~19.5M BTC in circulation
+    ETH: 120000000, // ~120M ETH
+    SOL: 430000000,
+    ADA: 35000000000,
+    XRP: 55000000000,
+    DOT: 1400000000,
+    AVAX: 360000000,
+    MATIC: 10000000000,
+    LINK: 600000000,
+    UNI: 1000000000,
+  };
+  
+  const multiplier = marketCapMultipliers[symbol] || 100000000;
+  const marketCap = price * multiplier;
+  
+  // Volume is typically 1-5% of market cap
+  const volumePercent = 0.01 + (Math.abs(Math.sin(seed)) * 0.04);
+  const volume24h = marketCap * volumePercent;
+  
+  return { marketCap, volume24h };
+};
 
 export const fetchLivePrices = async (): Promise<CryptoAsset[]> => {
   try {
@@ -42,16 +85,18 @@ export const fetchLivePrices = async (): Promise<CryptoAsset[]> => {
       throw new Error(response.error || 'Failed to fetch prices');
     }
 
+    const now = Date.now();
+    
     const assets: CryptoAsset[] = Object.entries(response.data).map(([symbol, priceData]) => {
       const currentPrice = priceData.price;
-      const prevPrice = previousPrices[symbol] || currentPrice;
-      const change24h = currentPrice - prevPrice;
-      const changePercent24h = prevPrice > 0 ? (change24h / prevPrice) * 100 : 0;
+      const changePercent24h = simulateChange24h(symbol, currentPrice);
+      const change24h = currentPrice * (changePercent24h / 100);
       
       // Update previous prices
-      previousPrices[symbol] = currentPrice;
+      previousPrices[symbol] = { price: currentPrice, timestamp: now };
       
       const metadata = CRYPTO_METADATA[symbol] || { name: symbol, icon: symbol[0] };
+      const { marketCap, volume24h } = simulateMarketData(symbol, currentPrice);
       
       return {
         id: symbol.toLowerCase(),
@@ -59,9 +104,9 @@ export const fetchLivePrices = async (): Promise<CryptoAsset[]> => {
         name: metadata.name,
         price: currentPrice,
         change24h,
-        changePercent24h: Math.random() > 0.5 ? Math.abs(changePercent24h) : -Math.abs(changePercent24h), // Simulate variation
-        volume24h: Math.random() * 10000000000 + 1000000000, // Simulated volume
-        marketCap: currentPrice * (Math.random() * 100000000 + 10000000), // Estimated market cap
+        changePercent24h,
+        volume24h,
+        marketCap,
         icon: metadata.icon,
       };
     });
@@ -74,38 +119,20 @@ export const fetchLivePrices = async (): Promise<CryptoAsset[]> => {
   }
 };
 
-export const fetchAccounts = async () => {
+export const fetchExchangeRates = async () => {
   try {
     const { data, error } = await supabase.functions.invoke('coinbase-api', {
-      body: { action: 'get-accounts' },
+      body: { action: 'get-exchange-rates' },
     });
 
     if (error) {
-      console.error('Error fetching accounts:', error);
+      console.error('Error fetching exchange rates:', error);
       throw error;
     }
 
     return data;
   } catch (error) {
-    console.error('Error in fetchAccounts:', error);
-    throw error;
-  }
-};
-
-export const fetchTransactions = async (accountId: string) => {
-  try {
-    const { data, error } = await supabase.functions.invoke('coinbase-api', {
-      body: { action: 'get-transactions', params: { accountId } },
-    });
-
-    if (error) {
-      console.error('Error fetching transactions:', error);
-      throw error;
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Error in fetchTransactions:', error);
+    console.error('Error in fetchExchangeRates:', error);
     throw error;
   }
 };
