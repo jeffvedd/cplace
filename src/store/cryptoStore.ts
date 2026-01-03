@@ -1,53 +1,73 @@
 import { create } from 'zustand';
-import { CryptoAsset, OrderBook, Trade, PortfolioSummary } from '@/types/crypto';
-import { mockAssets, mockPortfolio, generateOrderBook, mockTrades } from '@/data/mockData';
+import { CryptoAsset, OrderBook } from '@/types/crypto';
+import { mockAssets, generateOrderBook } from '@/data/mockData';
+
+interface MarketStats {
+  totalMarketCap: number;
+  totalVolume24h: number;
+  btcDominance: number;
+  topGainer: { symbol: string; change: number } | null;
+  topLoser: { symbol: string; change: number } | null;
+}
 
 interface CryptoState {
   assets: CryptoAsset[];
   selectedAsset: CryptoAsset | null;
   orderBook: OrderBook;
-  trades: Trade[];
-  portfolio: PortfolioSummary;
+  marketStats: MarketStats;
   isLoading: boolean;
   theme: 'light' | 'dark';
+  watchlist: string[];
   setAssets: (assets: CryptoAsset[]) => void;
   setSelectedAsset: (asset: CryptoAsset) => void;
-  setPortfolio: (portfolio: PortfolioSummary) => void;
   setTheme: (theme: 'light' | 'dark') => void;
   toggleTheme: () => void;
   refreshOrderBook: () => void;
-  updatePortfolioFromAssets: () => void;
+  updateMarketStats: () => void;
+  toggleWatchlist: (symbol: string) => void;
+  isInWatchlist: (symbol: string) => boolean;
 }
 
 export const useCryptoStore = create<CryptoState>((set, get) => ({
-  assets: mockAssets,
+  assets: mockAssets.map(a => ({ ...a, holdings: undefined, value: undefined })),
   selectedAsset: mockAssets[0],
   orderBook: generateOrderBook(),
-  trades: mockTrades,
-  portfolio: mockPortfolio,
+  marketStats: {
+    totalMarketCap: 0,
+    totalVolume24h: 0,
+    btcDominance: 0,
+    topGainer: null,
+    topLoser: null,
+  },
   isLoading: false,
   theme: 'dark',
+  watchlist: ['BTC', 'ETH', 'SOL'],
 
   setAssets: (assets) => {
-    set({ assets });
+    // Remove any holdings/value data - this is a quote-only app
+    const cleanAssets = assets.map(a => ({
+      ...a,
+      holdings: undefined,
+      value: undefined,
+    }));
+    
+    set({ assets: cleanAssets });
+    
     // Update selected asset if it exists in new assets
     const currentSelected = get().selectedAsset;
     if (currentSelected) {
-      const updated = assets.find(a => a.symbol === currentSelected.symbol);
+      const updated = cleanAssets.find(a => a.symbol === currentSelected.symbol);
       if (updated) {
         set({ selectedAsset: updated });
       }
     }
-    // Recalculate portfolio
-    get().updatePortfolioFromAssets();
+    
+    // Recalculate market stats
+    get().updateMarketStats();
   },
 
   setSelectedAsset: (asset) => {
     set({ selectedAsset: asset, orderBook: generateOrderBook() });
-  },
-
-  setPortfolio: (portfolio) => {
-    set({ portfolio });
   },
 
   setTheme: (theme) => {
@@ -68,26 +88,44 @@ export const useCryptoStore = create<CryptoState>((set, get) => ({
     set({ orderBook: generateOrderBook() });
   },
 
-  updatePortfolioFromAssets: () => {
+  updateMarketStats: () => {
     const assets = get().assets;
-    const totalValue = assets.reduce((sum, asset) => {
-      return sum + (asset.holdings || 0) * asset.price;
-    }, 0);
     
-    const change24h = assets.reduce((sum, asset) => {
-      return sum + (asset.holdings || 0) * asset.change24h;
-    }, 0);
+    const totalMarketCap = assets.reduce((sum, asset) => sum + asset.marketCap, 0);
+    const totalVolume24h = assets.reduce((sum, asset) => sum + asset.volume24h, 0);
     
-    const changePercent24h = totalValue > 0 ? (change24h / totalValue) * 100 : 0;
+    const btc = assets.find(a => a.symbol === 'BTC');
+    const btcDominance = btc ? (btc.marketCap / totalMarketCap) * 100 : 0;
+    
+    const sorted = [...assets].sort((a, b) => b.changePercent24h - a.changePercent24h);
+    const topGainer = sorted.length > 0 
+      ? { symbol: sorted[0].symbol, change: sorted[0].changePercent24h }
+      : null;
+    const topLoser = sorted.length > 0 
+      ? { symbol: sorted[sorted.length - 1].symbol, change: sorted[sorted.length - 1].changePercent24h }
+      : null;
     
     set({
-      portfolio: {
-        totalValue,
-        change24h,
-        changePercent24h,
-        roi: totalValue * 0.3, // Placeholder ROI calculation
-        roiPercent: 30,
+      marketStats: {
+        totalMarketCap,
+        totalVolume24h,
+        btcDominance,
+        topGainer,
+        topLoser,
       },
     });
+  },
+
+  toggleWatchlist: (symbol: string) => {
+    const watchlist = get().watchlist;
+    if (watchlist.includes(symbol)) {
+      set({ watchlist: watchlist.filter(s => s !== symbol) });
+    } else {
+      set({ watchlist: [...watchlist, symbol] });
+    }
+  },
+
+  isInWatchlist: (symbol: string) => {
+    return get().watchlist.includes(symbol);
   },
 }));

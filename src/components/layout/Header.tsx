@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import { 
   LayoutDashboard, 
   TrendingUp, 
-  Wallet, 
-  History, 
+  Trophy, 
+  Star,
   Settings,
   Sun,
   Moon,
@@ -25,9 +25,9 @@ export const Header = () => {
 
   const navItems = [
     { path: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
-    { path: '/trade', label: t('nav.trade'), icon: TrendingUp },
-    { path: '/portfolio', label: t('nav.portfolio'), icon: Wallet },
-    { path: '/history', label: t('nav.history'), icon: History },
+    { path: '/market', label: t('nav.market'), icon: TrendingUp },
+    { path: '/rankings', label: t('nav.rankings'), icon: Trophy },
+    { path: '/watchlist', label: t('nav.watchlist'), icon: Star },
     { path: '/settings', label: t('nav.settings'), icon: Settings },
   ];
 

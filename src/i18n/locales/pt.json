@@ -1,97 +1,63 @@
 {
   "nav": {
     "dashboard": "Painel",
-    "trade": "Negociar",
-    "portfolio": "Portfólio",
-    "history": "Histórico",
+    "market": "Mercado",
+    "rankings": "Rankings",
+    "watchlist": "Favoritos",
     "settings": "Configurações"
   },
   "dashboard": {
-    "title": "Painel",
-    "welcome": "Bem-vindo de volta! Aqui está o resumo do seu portfólio."
+    "title": "Painel de Cotações",
+    "welcome": "Acompanhe os preços das criptomoedas em tempo real.",
+    "disclaimer": "Este aplicativo exibe apenas informações de mercado e não executa operações financeiras."
   },
-  "trade": {
-    "title": "Negociar",
-    "subtitle": "Compre e venda criptomoedas com preços em tempo real.",
-    "placeOrder": "Fazer Pedido",
-    "market": "Mercado",
-    "limit": "Limite",
-    "stopLimit": "Stop-Limit",
-    "buy": "Comprar",
-    "sell": "Vender",
-    "price": "Preço (USD)",
-    "stopPrice": "Preço Stop (USD)",
-    "amount": "Quantidade",
-    "estimatedTotal": "Total Estimado",
-    "fee": "Taxa",
-    "total": "Total",
-    "orderPlaced": "Pedido Realizado",
-    "atMarketPrice": "ao preço de mercado"
+  "market": {
+    "title": "Mercado",
+    "subtitle": "Cotações de criptomoedas em tempo real da Coinbase.",
+    "priceChart": "Gráfico de Preço",
+    "orderBook": "Livro de Ofertas",
+    "selectAsset": "Selecionar Ativo",
+    "spread": "Spread"
   },
-  "portfolio": {
-    "title": "Portfólio",
-    "subtitle": "Suas participações em criptomoedas e alocação.",
-    "totalValue": "Valor Total",
+  "rankings": {
+    "title": "Rankings",
+    "subtitle": "Classificação das principais criptomoedas por capitalização.",
+    "rank": "Posição",
+    "asset": "Ativo",
+    "price": "Preço",
     "change24h": "Variação 24h",
-    "totalRoi": "ROI Total",
-    "assets": "Ativos",
-    "holdings": "Participações",
-    "asset": "Ativo",
-    "price": "Preço",
-    "value": "Valor",
-    "allocation": "Alocação"
+    "marketCap": "Cap. de Mercado",
+    "volume24h": "Volume 24h",
+    "gainers": "Maiores Altas",
+    "losers": "Maiores Baixas",
+    "byMarketCap": "Por Cap. de Mercado"
   },
-  "history": {
-    "title": "Histórico de Transações",
-    "subtitle": "Visualize e exporte sua atividade de negociação.",
-    "exportCsv": "Exportar CSV",
-    "filters": "Filtros",
-    "allTypes": "Todos os Tipos",
-    "allAssets": "Todos os Ativos",
-    "date": "Data",
-    "type": "Tipo",
-    "asset": "Ativo",
-    "amount": "Quantidade",
-    "price": "Preço",
-    "total": "Total",
-    "fee": "Taxa",
-    "status": "Status",
-    "completed": "Concluído",
-    "pending": "Pendente",
-    "failed": "Falhou",
-    "noTransactions": "Nenhuma transação encontrada com seus filtros."
+  "watchlist": {
+    "title": "Favoritos",
+    "subtitle": "Suas criptomoedas favoritas para acompanhamento.",
+    "empty": "Nenhum ativo na sua lista de favoritos.",
+    "addHint": "Clique no ícone ⭐ em qualquer ativo para adicionar aos favoritos.",
+    "add": "Adicionar aos favoritos",
+    "remove": "Remover dos favoritos"
   },
   "settings": {
     "title": "Configurações",
-    "subtitle": "Gerencie sua conta e preferências de segurança.",
+    "subtitle": "Personalize suas preferências do aplicativo.",
     "appearance": "Aparência",
     "darkMode": "Modo Escuro",
     "darkModeDescription": "Alternar entre tema claro e escuro",
-    "apiConfiguration": "Configuração da API",
-    "securityNotice": "Aviso de Segurança",
-    "securityMessage": "As chaves de API devem ser armazenadas com segurança no servidor. Conecte ao Lovable Cloud para habilitar o gerenciamento seguro de chaves de API.",
-    "apiKeyName": "Nome da Chave de API",
-    "enterApiKeyName": "Digite o nome da sua chave de API",
-    "readOnlyMode": "Modo Somente Leitura",
-    "readOnlyDescription": "Permitir apenas visualização, desabilitar negociação",
-    "saveApiConfiguration": "Salvar Configuração da API",
-    "apiKeyUpdated": "Chave de API Atualizada",
-    "apiKeyUpdatedMessage": "Sua chave de API do Coinbase foi armazenada com segurança.",
-    "security": "Segurança",
-    "twoFactor": "Autenticação de Dois Fatores",
-    "twoFactorDescription": "Adicione uma camada extra de segurança",
-    "enable2fa": "Habilitar 2FA",
-    "sessionManagement": "Gerenciamento de Sessões",
-    "sessionDescription": "Visualize e gerencie sessões ativas",
-    "viewSessions": "Ver Sessões",
     "notifications": "Notificações",
     "priceAlerts": "Alertas de Preço",
     "priceAlertsDescription": "Receba alertas quando os preços mudarem significativamente",
     "installApp": "Instalar App",
-    "installDescription": "Instale o Crypto Place no seu dispositivo para acesso rápido e visualização offline.",
+    "installDescription": "Instale o Crypto Place no seu dispositivo para acesso rápido.",
     "installCryptoPlace": "Instalar Crypto Place",
     "language": "Idioma",
-    "languageDescription": "Selecione o idioma da interface"
+    "languageDescription": "Selecione o idioma da interface",
+    "about": "Sobre",
+    "aboutDescription": "Este aplicativo exibe apenas cotações públicas da Coinbase. Não executa operações financeiras nem acessa contas de usuários.",
+    "dataSource": "Fonte dos Dados",
+    "dataSourceDescription": "Coinbase Public API"
   },
   "common": {
     "loading": "Carregando...",
@@ -102,11 +68,20 @@
     "topAssets": "Principais Ativos",
     "volume": "Volume",
     "marketCap": "Cap. de Mercado",
-    "portfolioValue": "Valor do Portfólio"
+    "price": "Preço",
+    "change24h": "Var. 24h",
+    "allAssets": "Todos os Ativos"
   },
   "livePrice": {
     "loading": "Carregando preços...",
     "error": "Falha ao carregar preços",
     "lastUpdate": "Última atualização"
+  },
+  "marketStats": {
+    "totalMarketCap": "Cap. Total do Mercado",
+    "totalVolume": "Volume Total 24h",
+    "btcDominance": "Dominância BTC",
+    "topGainer": "Maior Alta",
+    "topLoser": "Maior Baixa"
   }
 }

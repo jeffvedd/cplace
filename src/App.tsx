@@ -4,9 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
-import Trade from "./pages/Trade";
-import Portfolio from "./pages/Portfolio";
-import History from "./pages/History";
+import Market from "./pages/Market";
+import Rankings from "./pages/Rankings";
+import Watchlist from "./pages/Watchlist";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -20,9 +20,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/trade" element={<Trade />} />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/history" element={<History />} />
+          <Route path="/market" element={<Market />} />
+          <Route path="/rankings" element={<Rankings />} />
+          <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
