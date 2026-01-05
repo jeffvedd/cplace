@@ -4,6 +4,7 @@
     "market": "Market",
     "rankings": "Rankings",
     "watchlist": "Watchlist",
+    "trading": "Wallet",
     "settings": "Settings"
   },
   "dashboard": {
@@ -40,6 +41,69 @@
     "add": "Add to watchlist",
     "remove": "Remove from watchlist"
   },
+  "trading": {
+    "title": "Wallet & Trading",
+    "subtitle": "Manage your wallet and execute buy and sell orders.",
+    "tabs": {
+      "overview": "Overview",
+      "roi": "ROI",
+      "buy": "Buy",
+      "sell": "Sell"
+    },
+    "currentPrice": "Current price",
+    "wallet": {
+      "totalBalance": "Total Balance",
+      "accounts": "Accounts",
+      "noAccounts": "No accounts found."
+    },
+    "roi": {
+      "summary": "Performance Summary",
+      "invested": "Invested",
+      "currentValue": "Current Value",
+      "profitLoss": "Profit/Loss",
+      "totalROI": "Total ROI",
+      "byAsset": "ROI by Asset",
+      "noAssets": "No assets to calculate ROI."
+    },
+    "buy": {
+      "title": "Buy Crypto",
+      "description": "Execute a market buy order.",
+      "selectAsset": "Select Asset",
+      "amountUSD": "Amount in USD",
+      "preview": "Preview Order",
+      "orderSummary": "Order Summary",
+      "amount": "Amount",
+      "estimatedFee": "Estimated Fee",
+      "youWillReceive": "You will receive",
+      "confirm": "Confirm Buy",
+      "success": "Buy order executed successfully!",
+      "failed": "Failed to execute buy order.",
+      "orderPlaced": "Order placed successfully!",
+      "invalidAmount": "Invalid amount."
+    },
+    "sell": {
+      "title": "Sell Crypto",
+      "description": "Execute a market sell order.",
+      "selectAsset": "Select Asset",
+      "amount": "Amount",
+      "available": "Available",
+      "max": "Max",
+      "preview": "Preview Order",
+      "orderSummary": "Order Summary",
+      "selling": "Selling",
+      "grossValue": "Gross Value",
+      "estimatedFee": "Estimated Fee",
+      "youWillReceive": "You will receive",
+      "confirm": "Confirm Sell",
+      "success": "Sell order executed successfully!",
+      "failed": "Failed to execute sell order.",
+      "orderPlaced": "Order placed successfully!",
+      "invalidAmount": "Invalid amount.",
+      "insufficientBalance": "Insufficient balance.",
+      "noAssets": "No assets available",
+      "noAssetsDescription": "You don't have any crypto assets to sell. Buy some assets first."
+    }
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "Customize your app preferences.",
@@ -55,9 +119,9 @@
     "language": "Language",
     "languageDescription": "Select the interface language",
     "about": "About",
-    "aboutDescription": "This app displays only public quotes from Coinbase. It does not execute financial operations or access user accounts.",
+    "aboutDescription": "This app displays public Coinbase quotes and enables buy/sell operations via Advanced Trade API.",
     "dataSource": "Data Source",
-    "dataSourceDescription": "Coinbase Public API"
+    "dataSourceDescription": "Coinbase Advanced Trade API"
   },
   "common": {
     "loading": "Loading...",
