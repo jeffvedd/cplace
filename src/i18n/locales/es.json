@@ -4,6 +4,7 @@
     "market": "Mercado",
     "rankings": "Rankings",
     "watchlist": "Favoritos",
+    "trading": "Cartera",
     "settings": "Configuración"
   },
   "dashboard": {
@@ -40,6 +41,69 @@
     "add": "Añadir a favoritos",
     "remove": "Eliminar de favoritos"
   },
+  "trading": {
+    "title": "Cartera & Trading",
+    "subtitle": "Gestiona tu cartera y ejecuta órdenes de compra y venta.",
+    "tabs": {
+      "overview": "Resumen",
+      "roi": "ROI",
+      "buy": "Comprar",
+      "sell": "Vender"
+    },
+    "currentPrice": "Precio actual",
+    "wallet": {
+      "totalBalance": "Saldo Total",
+      "accounts": "Cuentas",
+      "noAccounts": "No se encontraron cuentas."
+    },
+    "roi": {
+      "summary": "Resumen de Rendimiento",
+      "invested": "Invertido",
+      "currentValue": "Valor Actual",
+      "profitLoss": "Ganancia/Pérdida",
+      "totalROI": "ROI Total",
+      "byAsset": "ROI por Activo",
+      "noAssets": "No hay activos para calcular ROI."
+    },
+    "buy": {
+      "title": "Comprar Cripto",
+      "description": "Ejecuta una orden de compra a mercado.",
+      "selectAsset": "Seleccionar Activo",
+      "amountUSD": "Monto en USD",
+      "preview": "Simular Orden",
+      "orderSummary": "Resumen de la Orden",
+      "amount": "Monto",
+      "estimatedFee": "Comisión Estimada",
+      "youWillReceive": "Recibirás",
+      "confirm": "Confirmar Compra",
+      "success": "¡Orden de compra ejecutada con éxito!",
+      "failed": "Error al ejecutar orden de compra.",
+      "orderPlaced": "¡Orden enviada con éxito!",
+      "invalidAmount": "Monto inválido."
+    },
+    "sell": {
+      "title": "Vender Cripto",
+      "description": "Ejecuta una orden de venta a mercado.",
+      "selectAsset": "Seleccionar Activo",
+      "amount": "Cantidad",
+      "available": "Disponible",
+      "max": "Máx",
+      "preview": "Simular Orden",
+      "orderSummary": "Resumen de la Orden",
+      "selling": "Vendiendo",
+      "grossValue": "Valor Bruto",
+      "estimatedFee": "Comisión Estimada",
+      "youWillReceive": "Recibirás",
+      "confirm": "Confirmar Venta",
+      "success": "¡Orden de venta ejecutada con éxito!",
+      "failed": "Error al ejecutar orden de venta.",
+      "orderPlaced": "¡Orden enviada con éxito!",
+      "invalidAmount": "Cantidad inválida.",
+      "insufficientBalance": "Saldo insuficiente.",
+      "noAssets": "No hay activos disponibles",
+      "noAssetsDescription": "No tienes criptoactivos para vender. Compra algunos activos primero."
+    }
+  },
   "settings": {
     "title": "Configuración",
     "subtitle": "Personaliza tus preferencias de la aplicación.",
@@ -55,9 +119,9 @@
     "language": "Idioma",
     "languageDescription": "Selecciona el idioma de la interfaz",
     "about": "Acerca de",
-    "aboutDescription": "Esta aplicación muestra solo cotizaciones públicas de Coinbase. No ejecuta operaciones financieras ni accede a cuentas de usuarios.",
+    "aboutDescription": "Esta aplicación muestra cotizaciones públicas de Coinbase y permite operaciones de compra y venta mediante la API Advanced Trade.",
     "dataSource": "Fuente de Datos",
-    "dataSourceDescription": "Coinbase Public API"
+    "dataSourceDescription": "Coinbase Advanced Trade API"
   },
   "common": {
     "loading": "Cargando...",

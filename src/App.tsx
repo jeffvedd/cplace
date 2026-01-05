@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Market from "./pages/Market";
 import Rankings from "./pages/Rankings";
 import Watchlist from "./pages/Watchlist";
+import Trading from "./pages/Trading";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/market" element={<Market />} />
           <Route path="/rankings" element={<Rankings />} />
           <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/trading" element={<Trading />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
