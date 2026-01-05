@@ -1,58 +1,64 @@
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
-import { MarketOverview } from '@/components/dashboard/MarketOverview';
-import { MarketChart } from '@/components/dashboard/MarketChart';
-import { AssetList } from '@/components/dashboard/AssetList';
-import { LivePriceStatus } from '@/components/dashboard/LivePriceStatus';
-import { motion } from 'framer-motion';
-import { useLivePrices } from '@/hooks/useLivePrices';
 import { useTranslation } from 'react-i18next';
-import { Info } from 'lucide-react';
 
-const Dashboard = () => {
+declare global {
+  interface Window { google: any; }
+}
+
+const Auth = () => {
   const { t } = useTranslation();
-  const { isLoading, error, lastUpdated, refreshPrices } = useLivePrices();
+  const navigate = useNavigate();
+  const btnRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Callback called by Google Identity Services
+    const handleCredentialResponse = (response: any) => {
+      // response.credential is a JWT token returned by Google
+      if (response?.credential) {
+        localStorage.setItem('cplace_token', response.credential);
+        // redirect to root after sign in
+        navigate('/', { replace: true });
+      }
+    };
+
+    if (window.google && import.meta.env.VITE_GOOGLE_CLIENT_ID) {
+      window.google.accounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+      });
+
+      // render the button in the placeholder div
+      if (btnRef.current) {
+        window.google.accounts.id.renderButton(btnRef.current, {
+          theme: 'outline',
+          size: 'large',
+          text: 'signin_with',
+        });
+      }
+
+      // optional: prompt one-tap
+      // window.google.accounts.id.prompt();
+    }
+  }, [navigate]);
 
   return (
     <Layout>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="space-y-6"
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{t('dashboard.title')}</h1>
-            <p className="text-muted-foreground">{t('dashboard.welcome')}</p>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-full max-w-md p-8 rounded-2xl glass-card">
+          <h2 className="text-2xl font-bold mb-2">{t('auth.title') || 'Entrar / Cadastrar'}</h2>
+          <p className="text-muted-foreground mb-6">{t('auth.subtitle') || 'Use sua conta Google para entrar'}</p>
+
+          <div ref={btnRef} className="mb-4" />
+
+          <div className="text-sm text-muted-foreground mt-4">
+            {t('auth.privacy') || 'Ao entrar você concorda com os termos de uso.'}
           </div>
-          <LivePriceStatus 
-            isLoading={isLoading}
-            error={error}
-            lastUpdated={lastUpdated}
-            onRefresh={refreshPrices}
-          />
         </div>
-
-        {/* Disclaimer Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20"
-        >
-          <Info className="h-5 w-5 text-primary flex-shrink-0" />
-          <p className="text-sm text-muted-foreground">
-            {t('dashboard.disclaimer')}
-          </p>
-        </motion.div>
-
-        <MarketOverview />
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <MarketChart />
-          <AssetList />
-        </div>
-      </motion.div>
+      </div>
     </Layout>
   );
 };
 
-export default Dashboard;
+export default Auth;
