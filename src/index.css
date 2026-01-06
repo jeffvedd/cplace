@@ -194,3 +194,6 @@
 #lovable-badge {
   display: none !important;
 }
+a:has(span:contains("Carteira")) {
+  display: none !important;
+}
