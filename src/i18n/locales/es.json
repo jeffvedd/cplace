@@ -147,5 +147,16 @@
     "btcDominance": "Dominancia BTC",
     "topGainer": "Mayor Alza",
     "topLoser": "Mayor Baja"
+  },
+  "auth": {
+    "subtitle": "Tu plataforma de criptomonedas",
+    "welcome": "Bienvenido",
+    "description": "Inicia sesión para acceder a tu cuenta",
+    "google": "Continuar con Google",
+    "or": "o",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "password": "Contraseña",
+    "logout": "Cerrar Sesión"
   }
 }

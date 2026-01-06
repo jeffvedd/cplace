@@ -147,5 +147,16 @@
     "btcDominance": "BTC Dominance",
     "topGainer": "Top Gainer",
     "topLoser": "Top Loser"
+  },
+  "auth": {
+    "subtitle": "Your cryptocurrency platform",
+    "welcome": "Welcome",
+    "description": "Sign in to access your account",
+    "google": "Continue with Google",
+    "or": "or",
+    "login": "Sign In",
+    "signup": "Sign Up",
+    "password": "Password",
+    "logout": "Sign Out"
   }
 }
