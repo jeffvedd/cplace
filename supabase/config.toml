@@ -1,1 +1,4 @@
 project_id = "bcaciocaqrrhpinrqbjc"
+
+[functions.coinbase-api]
+verify_jwt = false
