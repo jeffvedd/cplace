@@ -119,7 +119,7 @@
     "language": "Idioma",
     "languageDescription": "Selecciona el idioma de la interfaz",
     "about": "Acerca de",
-    "aboutDescription": "Esta aplicación muestra cotizaciones públicas de Coinbase y permite operaciones de compra y venta mediante la API Advanced Trade.",
+    "aboutDescription": "Esta aplicación muestra cotizaciones públicas de criptomonedas de Coinbase en tiempo real.",
     "dataSource": "Fuente de Datos",
     "dataSourceDescription": "Coinbase Advanced Trade API"
   },

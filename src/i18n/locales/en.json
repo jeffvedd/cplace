@@ -119,7 +119,7 @@
     "language": "Language",
     "languageDescription": "Select the interface language",
     "about": "About",
-    "aboutDescription": "This app displays public Coinbase quotes and enables buy/sell operations via Advanced Trade API.",
+    "aboutDescription": "This app displays real-time public cryptocurrency quotes from Coinbase.",
     "dataSource": "Data Source",
     "dataSourceDescription": "Coinbase Advanced Trade API"
   },
