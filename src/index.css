@@ -194,14 +194,4 @@
 #lovable-badge {
   display: none !important;
 }
-button[data-route="Wallet"],
-li[data-route="Wallet"],
-.menu-wallet,
-.wallet-menu {
-  display: none !important;
-}
-a[href*="wallet"],
-a[href*="carteira"],
-a[href*="Wallet"] {
-  display: none !important;
-    }
+
