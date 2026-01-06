@@ -20,18 +20,121 @@ const waitForRateLimit = async () => {
   lastRequestTime = Date.now();
 };
 
-// Convert PEM private key to CryptoKey for signing
+// Convert SEC1 EC private key to PKCS#8 format and import
 const importPrivateKey = async (pemKey: string): Promise<CryptoKey> => {
-  // Remove PEM headers and convert to binary
-  const pemContents = pemKey
+  // Clean the PEM key - handle both EC PRIVATE KEY and PRIVATE KEY formats
+  let pemContents = pemKey
     .replace(/-----BEGIN EC PRIVATE KEY-----/, '')
     .replace(/-----END EC PRIVATE KEY-----/, '')
+    .replace(/-----BEGIN PRIVATE KEY-----/, '')
+    .replace(/-----END PRIVATE KEY-----/, '')
     .replace(/\\n/g, '')
     .replace(/\n/g, '')
     .replace(/\s/g, '');
   
   const binaryDer = Uint8Array.from(atob(pemContents), c => c.charCodeAt(0));
   
+  // Check if this is SEC1 format (EC PRIVATE KEY) - typically 118-121 bytes for P-256
+  // SEC1 format needs to be wrapped in PKCS#8 structure
+  if (binaryDer.length < 150) {
+    // This is likely SEC1 format, wrap it in PKCS#8
+    // PKCS#8 header for EC P-256 key
+    const pkcs8Header = new Uint8Array([
+      0x30, 0x81, 0x87, // SEQUENCE, length 135
+      0x02, 0x01, 0x00, // INTEGER version = 0
+      0x30, 0x13,       // SEQUENCE AlgorithmIdentifier
+      0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01, // OID ecPublicKey
+      0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, // OID P-256
+      0x04, 0x6d, // OCTET STRING, length 109
+      0x30, 0x6b, // SEQUENCE, length 107
+    ]);
+    
+    // For SEC1, we need to extract just the private key bytes and reconstruct
+    // Simpler approach: try importing as raw format doesn't work, use jose library approach
+    
+    // Actually, let's try a different approach - parse the SEC1 structure
+    // SEC1 structure: SEQUENCE { version INTEGER, privateKey OCTET STRING, [0] parameters, [1] publicKey }
+    
+    // Try direct PKCS#8 import first (in case user provided PKCS#8 format)
+    try {
+      return await crypto.subtle.importKey(
+        'pkcs8',
+        binaryDer,
+        { name: 'ECDSA', namedCurve: 'P-256' },
+        false,
+        ['sign']
+      );
+    } catch {
+      // If PKCS#8 fails, construct PKCS#8 from SEC1
+      // For P-256 SEC1 key, wrap with standard PKCS#8 header
+      const pkcs8Key = new Uint8Array([
+        0x30, 0x81, 0x87, // SEQUENCE
+        0x02, 0x01, 0x00, // version INTEGER 0
+        0x30, 0x13, // AlgorithmIdentifier SEQUENCE
+        0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01, // ecPublicKey OID
+        0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, // P-256 OID  
+        0x04, 0x6d, // OCTET STRING wrapper
+        ...binaryDer // The SEC1 key data
+      ]);
+      
+      // Adjust length bytes if needed
+      const adjustedPkcs8 = new Uint8Array(26 + binaryDer.length);
+      adjustedPkcs8.set([
+        0x30, (24 + binaryDer.length) > 127 ? 0x81 : 0, // SEQUENCE with length
+      ], 0);
+      
+      // Just wrap the SEC1 data
+      const wrappedKey = new Uint8Array([
+        0x30, 0x81, 24 + binaryDer.length, // SEQUENCE
+        0x02, 0x01, 0x00, // version
+        0x30, 0x13, // AlgorithmIdentifier
+        0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01,
+        0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07,
+        0x04, binaryDer.length + 2, 0x04, binaryDer.length,
+        ...binaryDer.slice(binaryDer.length - 32) // Just the 32-byte private key
+      ]);
+      
+      // Extract just the 32-byte private key from SEC1 and use raw import
+      // SEC1 structure: 30 len 02 01 01 04 20 [32 bytes private key] ...
+      let privateKeyBytes: Uint8Array;
+      
+      // Find the private key in SEC1 structure (after 04 20 marker)
+      for (let i = 0; i < binaryDer.length - 32; i++) {
+        if (binaryDer[i] === 0x04 && binaryDer[i+1] === 0x20) {
+          privateKeyBytes = binaryDer.slice(i + 2, i + 34);
+          break;
+        }
+      }
+      
+      if (!privateKeyBytes!) {
+        throw new Error('Could not extract private key from SEC1 format');
+      }
+      
+      // Build proper PKCS#8 structure
+      const pkcs8Wrapped = new Uint8Array([
+        0x30, 0x41, // SEQUENCE length 65
+        0x02, 0x01, 0x00, // INTEGER version 0
+        0x30, 0x13, // SEQUENCE AlgorithmIdentifier
+        0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01, // OID 1.2.840.10045.2.1 (ecPublicKey)
+        0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, // OID 1.2.840.10045.3.1.7 (P-256)
+        0x04, 0x27, // OCTET STRING length 39
+        0x30, 0x25, // SEQUENCE length 37
+        0x02, 0x01, 0x01, // INTEGER version 1
+        0x04, 0x20, // OCTET STRING length 32
+        ...privateKeyBytes // 32-byte private key
+      ]);
+      
+      return await crypto.subtle.importKey(
+        'pkcs8',
+        pkcs8Wrapped,
+        { name: 'ECDSA', namedCurve: 'P-256' },
+        false,
+        ['sign']
+      );
+    }
+  }
+  
+  // If longer, assume it's already PKCS#8 format
   return await crypto.subtle.importKey(
     'pkcs8',
     binaryDer,
