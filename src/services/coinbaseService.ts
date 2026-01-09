@@ -8,6 +8,7 @@ interface CoinbasePrice {
   open24h?: number;
   high24h?: number;
   low24h?: number;
+  changePercent24h?: number;
   name?: string;
   displayName?: string;
 }
@@ -242,9 +243,9 @@ export const fetchLivePrices = async (): Promise<CryptoAsset[]> => {
       const currentPrice = priceData.price;
       const product = products?.find(p => p.symbol === symbol);
       
-      // Calculate 24h change from actual data
-      let changePercent24h = 0;
-      if (priceData.open24h) {
+      // Use pre-calculated change from API or calculate from open
+      let changePercent24h = priceData.changePercent24h ?? 0;
+      if (changePercent24h === 0 && priceData.open24h) {
         changePercent24h = calculate24hChange(currentPrice, priceData.open24h);
       }
       
