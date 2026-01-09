@@ -64,7 +64,7 @@ const fetchAllPrices = async () => {
     const prices: Record<string, any> = {};
     const symbols = products.map((p: any) => p.symbol);
     
-    // Use batch approach - fetch tickers in parallel batches
+    // Use batch approach - fetch stats in parallel batches
     const batchSize = 10;
     for (let i = 0; i < symbols.length; i += batchSize) {
       const batch = symbols.slice(i, i + batchSize);
@@ -73,13 +73,57 @@ const fetchAllPrices = async () => {
         try {
           await waitForRateLimit();
           
-          // Get ticker data which includes price and 24h stats
-          const tickerResponse = await fetch(
-            `https://api.exchange.coinbase.com/products/${symbol}-USD/ticker`
-          );
+          // Get 24h stats which includes open, high, low, volume
+          const productId = `${symbol}-USD`;
+          const [statsResponse, tickerResponse] = await Promise.all([
+            fetch(`https://api.exchange.coinbase.com/products/${productId}/stats`),
+            fetch(`https://api.exchange.coinbase.com/products/${productId}/ticker`)
+          ]);
           
-          if (!tickerResponse.ok) {
-            // Fallback to spot price if ticker fails
+          const product = products.find((p: any) => p.symbol === symbol);
+          
+          if (statsResponse.ok && tickerResponse.ok) {
+            const statsData = await statsResponse.json();
+            const tickerData = await tickerResponse.json();
+            
+            const currentPrice = parseFloat(tickerData.price);
+            const open24h = parseFloat(statsData.open);
+            const high24h = parseFloat(statsData.high);
+            const low24h = parseFloat(statsData.low);
+            const volume24h = parseFloat(statsData.volume) * currentPrice;
+            
+            // Calculate percentage change
+            const changePercent24h = open24h > 0 
+              ? ((currentPrice - open24h) / open24h) * 100 
+              : 0;
+            
+            prices[symbol] = {
+              price: currentPrice,
+              currency: 'USD',
+              volume24h: volume24h,
+              open24h: open24h,
+              high24h: high24h,
+              low24h: low24h,
+              changePercent24h: changePercent24h,
+              name: product?.name || symbol,
+              displayName: product?.displayName || symbol,
+            };
+          } else if (tickerResponse.ok) {
+            // Fallback to ticker only
+            const tickerData = await tickerResponse.json();
+            prices[symbol] = {
+              price: parseFloat(tickerData.price),
+              currency: 'USD',
+              volume24h: parseFloat(tickerData.volume) * parseFloat(tickerData.price),
+              open24h: null,
+              high24h: null,
+              low24h: null,
+              changePercent24h: 0,
+              name: product?.name || symbol,
+              displayName: product?.displayName || symbol,
+            };
+          } else {
+            // Fallback to spot price if both fail
             const spotResponse = await fetch(
               `https://api.coinbase.com/v2/prices/${symbol}-USD/spot`
             );
@@ -88,24 +132,12 @@ const fetchAllPrices = async () => {
               prices[symbol] = {
                 price: parseFloat(spotData.data.amount),
                 currency: 'USD',
+                changePercent24h: 0,
+                name: product?.name || symbol,
+                displayName: product?.displayName || symbol,
               };
             }
-            return;
           }
-          
-          const tickerData = await tickerResponse.json();
-          const product = products.find((p: any) => p.symbol === symbol);
-          
-          prices[symbol] = {
-            price: parseFloat(tickerData.price),
-            currency: 'USD',
-            volume24h: parseFloat(tickerData.volume) * parseFloat(tickerData.price),
-            open24h: parseFloat(tickerData.open_24h) || null,
-            high24h: parseFloat(tickerData.high_24h) || null,
-            low24h: parseFloat(tickerData.low_24h) || null,
-            name: product?.name || symbol,
-            displayName: product?.displayName || symbol,
-          };
         } catch (error) {
           console.warn(`Error fetching price for ${symbol}:`, error);
         }
