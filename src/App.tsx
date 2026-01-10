@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Market from "./pages/Market";
 import Rankings from "./pages/Rankings";
 import Watchlist from "./pages/Watchlist";
+import Wallet from "./pages/Wallet";
 import Settings from "./pages/Settings";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -53,6 +54,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Watchlist />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/wallet"
+              element={
+                <ProtectedRoute>
+                  <Wallet />
                 </ProtectedRoute>
               }
             />

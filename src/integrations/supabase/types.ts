@@ -14,7 +14,114 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      crypto_holdings: {
+        Row: {
+          amount: number
+          avg_buy_price: number
+          created_at: string
+          id: string
+          symbol: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          avg_buy_price?: number
+          created_at?: string
+          id?: string
+          symbol: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          avg_buy_price?: number
+          created_at?: string
+          id?: string
+          symbol?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          crypto_amount: number | null
+          crypto_price: number | null
+          crypto_symbol: string | null
+          fee: number
+          id: string
+          payment_id: string | null
+          payment_method: string | null
+          pix_qr_code: string | null
+          pix_qr_code_base64: string | null
+          status: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          crypto_amount?: number | null
+          crypto_price?: number | null
+          crypto_symbol?: string | null
+          fee?: number
+          id?: string
+          payment_id?: string | null
+          payment_method?: string | null
+          pix_qr_code?: string | null
+          pix_qr_code_base64?: string | null
+          status?: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          crypto_amount?: number | null
+          crypto_price?: number | null
+          crypto_symbol?: string | null
+          fee?: number
+          id?: string
+          payment_id?: string | null
+          payment_method?: string | null
+          pix_qr_code?: string | null
+          pix_qr_code_base64?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallets: {
+        Row: {
+          brl_balance: number
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          brl_balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          brl_balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

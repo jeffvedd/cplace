@@ -5,6 +5,7 @@ import {
   TrendingUp, 
   Trophy, 
   Star,
+  Wallet,
   Settings,
   Sun,
   Moon,
@@ -40,6 +41,7 @@ export const Header = () => {
   const navItems = [
     { path: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
     { path: '/market', label: t('nav.market'), icon: TrendingUp },
+    { path: '/wallet', label: 'Carteira', icon: Wallet },
     { path: '/rankings', label: t('nav.rankings'), icon: Trophy },
     { path: '/watchlist', label: t('nav.watchlist'), icon: Star },
     { path: '/settings', label: t('nav.settings'), icon: Settings },
